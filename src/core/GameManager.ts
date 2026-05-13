@@ -154,25 +154,30 @@ export class GameManager {
 
   async commitItem(item: Item): Promise<void> {
     if (item.isInTray) return;
-    if (this.tray.isFull()) return;
+
+    // Reserve the destination slot synchronously so a second rapid commit
+    // cannot grab the same index across the arc animation.
+    const slotIndex = this.tray.reserveSlot(item);
+    if (slotIndex < 0) return;
 
     item.body.body.setMotionType(PhysicsMotionType.STATIC);
     item.isSelectable = false;
 
-    const slotIndex = this.tray.firstEmptySlotIndex();
-    if (slotIndex < 0) return;
+    // Selectability list is recomputed against `isInTray`, which is now true.
+    this.selectability.setItems(this.items.filter((i) => !i.isInTray));
 
     const targetWorld = this.projectSlotToWorld(slotIndex);
-    await animateArcTo(item.mesh, targetWorld, 300);
-
-    // The mesh's position is now at the slot world position; the tray view
-    // shows the icon. Hide the 3D mesh since the icon takes over.
-    item.mesh.setEnabled(false);
-    item.body.dispose();
-    this.tray.placeAt(slotIndex, item);
-
-    // Refresh selectability list (this item is gone from the pile).
-    this.selectability.setItems(this.items.filter((i) => !i.isInTray));
+    try {
+      await animateArcTo(item.mesh, targetWorld, 300);
+    } finally {
+      item.mesh.setEnabled(false);
+      try {
+        item.body.dispose();
+      } catch {
+        // Body may already have been disposed by a level teardown.
+      }
+      this.tray.confirmArrival(slotIndex);
+    }
   }
 
   private projectSlotToWorld(slotIndex: number): Vector3 {

@@ -68,6 +68,29 @@ export class Tray {
     this.notifyChange();
   }
 
+  // Synchronously reserve the first empty slot. The slot is marked occupied
+  // immediately so concurrent commits cannot reuse it across an arc animation.
+  // Returns -1 if the tray is full.
+  reserveSlot(item: Item): number {
+    const idx = this.firstEmptySlotIndex();
+    if (idx < 0) return -1;
+    this.slots[idx] = item;
+    item.isInTray = true;
+    this.notifyChange();
+    return idx;
+  }
+
+  // Call after the commit animation completes. Triggers match resolution and
+  // tray-full signalling. No-op if the slot was cleared by a prior match.
+  confirmArrival(_index: number): void {
+    this.checkForMatches();
+    if (this.isFull()) {
+      this.bus.emit('tray_full', { canMatch: this.hasMatchableTriple() });
+    }
+  }
+
+  // Legacy synchronous placement (still used by tests and direct programmatic
+  // placement). Equivalent to reserve + confirm.
   placeAt(index: number, item: Item): void {
     if (index < 0 || index >= this.slots.length) {
       throw new Error(`Tray.placeAt: index ${index} out of bounds`);
