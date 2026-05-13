@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#1a1a24" />
+    <title>Match 3D</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="renderCanvas"></canvas>
+      <div id="hud-overlay">
+        <div id="top-hud">
+          <div id="goal-cards"></div>
+          <div id="timer"></div>
+          <button id="pause-button" type="button" aria-label="Pause">II</button>
+        </div>
+        <div id="bottom-hud">
+          <div id="tray" data-testid="tray"></div>
+          <div id="booster-row"></div>
+        </div>
+      </div>
+      <div id="screen-overlays"></div>
+      <div id="loading" data-testid="loading">Loading…</div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
