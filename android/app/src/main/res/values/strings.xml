@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Match 3D</string>
+    <string name="title_activity_main">Match 3D</string>
+    <string name="package_name">com.example.match3d</string>
+    <string name="custom_url_scheme">com.example.match3d</string>
+</resources>

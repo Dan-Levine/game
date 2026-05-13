@@ -1,0 +1,45 @@
+{
+  "name": "match-3d-puzzle",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "copy-havok": "node scripts/copy-havok.js",
+    "predev": "npm run copy-havok",
+    "prebuild": "npm run copy-havok",
+    "prepreview": "npm run copy-havok",
+    "dev": "vite",
+    "build": "vite build",
+    "build:e2e": "VITE_INCLUDE_TEST_HOOKS=1 vite build --mode staging",
+    "preview": "vite preview --port 4173 --strictPort",
+    "preview:e2e": "npm run build:e2e && vite preview --port 4173 --strictPort",
+    "typecheck": "tsc --noEmit",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "playwright test --config=tests/e2e/playwright.config.ts",
+    "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
+    "cap:sync": "npx cap sync",
+    "cap:sync:android": "npx cap sync android",
+    "cap:open:android": "npx cap open android"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^7.34.0",
+    "@babylonjs/havok": "^1.3.10",
+    "@babylonjs/loaders": "^7.34.0",
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/haptics": "^6.0.1",
+    "@capacitor/preferences": "^6.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2",
+    "@playwright/test": "^1.47.2",
+    "@types/node": "^22.5.5",
+    "@vitest/coverage-v8": "^2.1.1",
+    "happy-dom": "^15.7.4",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8",
+    "vite-plugin-pwa": "^0.20.5",
+    "vitest": "^2.1.1"
+  }
+}
